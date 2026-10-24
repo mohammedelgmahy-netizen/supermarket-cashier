@@ -283,7 +283,7 @@ dialog form,dialog .in{padding:18px;display:grid;gap:12px}
       <div class="panel stack" style="gap:10px">
         <h3>الأصناف</h3>
         <div style="position:relative">
-          <input id="piAdd" placeholder="امسح الباركود أو اكتب اسم المنتج (قديم أو جديد)" aria-label="إضافة صنف" style="padding:12px;font-size:16px;border-width:2px">
+          <div class="row" style="flex-wrap:nowrap"><input id="piAdd" placeholder="امسح الباركود أو اكتب اسم المنتج" aria-label="إضافة صنف" style="padding:12px;font-size:16px;border-width:2px"><button type="button" class="btn" id="piCam" aria-label="مسح الباركود بالكاميرا" style="align-self:stretch">كاميرا</button></div>
           <div id="piSug" class="sug" hidden></div>
         </div>
         <div id="piLines" class="stack" style="gap:10px"></div>
@@ -357,7 +357,7 @@ dialog form,dialog .in{padding:18px;display:grid;gap:12px}
   <h2 id="pTitle">منتج جديد</h2>
   <label class="f"><span>اسم المنتج</span><input id="fName" required></label>
   <div class="grid2">
-    <label class="f"><span>الباركود</span><div class="row" style="flex-wrap:nowrap"><input id="fCode" inputmode="numeric" placeholder="امسحه أو اكتبه"><button type="button" class="btn sm" id="fGen" title="توليد كود داخلي">توليد</button></div></label>
+    <label class="f"><span>الباركود</span><div class="row" style="flex-wrap:nowrap"><input id="fCode" inputmode="numeric" placeholder="امسحه أو اكتبه"><button type="button" class="btn sm" id="fCam" aria-label="مسح الباركود بالكاميرا">كاميرا</button><button type="button" class="btn sm" id="fGen" title="توليد كود داخلي">توليد</button></div></label>
     <label class="f"><span>القسم</span><input id="fCat" list="catList" placeholder="مثلاً: ألبان"><datalist id="catList"></datalist></label>
     <label class="f"><span>سعر البيع</span><input id="fPrice" type="number" min="0" step="any" inputmode="decimal" required></label>
     <label class="f"><span>سعر الشراء (للربح)</span><input id="fCost" type="number" min="0" step="any" inputmode="decimal"></label>
@@ -619,22 +619,25 @@ $('#rReturn').onclick=()=>{const s=shown;ask('مرتجع فاتورة #'+s.no,'�
 
 /* ---------- camera scan ---------- */
 let stream=null,detector=null,camTimer=null,lastCode='',lastAt=0;
-$('#camBtn').onclick=async()=>{
-  const msg=$('#camMsg');msg.textContent='';$('#cDlg').showModal();
+// target: 'sale' adds to the cart, 'pinv' adds to the purchase invoice, 'form' fills the product form's barcode
+async function openCam(target){
+  camTarget=target;const msg=$('#camMsg');msg.textContent='';$('#cDlg').showModal();
   if(!('BarcodeDetector' in window)){msg.textContent='المتصفح ده مش بيدعم مسح الباركود بالكاميرا. استخدم Chrome على أندرويد، أو اكتب الرقم، أو وصّل قارئ باركود.';return}
   try{detector=detector||new BarcodeDetector({formats:['ean_13','ean_8','upc_a','upc_e','code_128','code_39','itf']});
     stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'},audio:false});
     const v=$('#cam');v.srcObject=stream;await v.play();msg.textContent='بيدوّر على باركود...';
     camTimer=setInterval(async()=>{try{const r=await detector.detect(v);if(!r.length)return;const c=r[0].rawValue;
       if(c===lastCode&&Date.now()-lastAt<1800)return;lastCode=c;lastAt=Date.now();
-      if(document.activeElement?.id==='fCode'||camTarget==='form'){ $('#fCode').value=c;stopCam();$('#cDlg').close();return}
+      if(camTarget==='form'){$('#fCode').value=c;beep();stopCam();$('#cDlg').close();return}
+      if(camTarget==='pinv'){piScan(c);beep();msg.textContent='اتضاف للفاتورة: '+(S.products.find(p=>p.code===c)?.name||'منتج جديد '+c);if(!$('#camKeep').checked){stopCam();$('#cDlg').close()}return}
       if(scanCode(c)){msg.textContent='اتضاف: '+(S.products.find(p=>p.code===c)?.name||c);if(!$('#camKeep').checked){stopCam();$('#cDlg').close()}}
       else{beep(false);msg.textContent='الباركود '+c+' مش متسجل'}}catch(e){}},250);
   }catch(e){msg.textContent='مقدرناش نفتح الكاميرا. اسمح للمتصفح باستخدامها وجرب تاني.'}
-};
+}
 let camTarget='sale';
-function stopCam(){clearInterval(camTimer);camTimer=null;if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}camTarget='sale'}
-$('#cDlg').addEventListener('close',()=>{stopCam();if($('#pDlg').open)return;focusScan()});
+$('#camBtn').onclick=()=>openCam('sale');$('#piCam').onclick=()=>openCam('pinv');$('#fCam').onclick=()=>openCam('form');
+function stopCam(){clearInterval(camTimer);camTimer=null;if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}}
+$('#cDlg').addEventListener('close',()=>{stopCam();if($('#pDlg').open)return;if(camTarget==='pinv'&&pi){const nm=$('#piLines .pl:last-child [data-k="name"]');(nm&&!nm.value?nm:$('#piAdd')).focus();return}focusScan()});
 
 /* ---------- products ---------- */
 let editId=null;
@@ -719,21 +722,25 @@ $('#piPaid').oninput=piTotals;
 $('#piLines').addEventListener('input',e=>{const k=e.target.dataset.k;if(!k)return;const el=e.target.closest('.pl'),l=pi.lines[+el.dataset.i];l[k]=e.target.value;
   marginHTML(el.querySelector('[data-mg]'),l.cost,l.price);el.querySelector('[data-lt]').textContent=fmt((+l.qty||0)*(+l.cost||0));piTotals()});
 $('#piLines').addEventListener('click',e=>{const b=e.target.closest('[data-rm]');if(b){pi.lines.splice(+b.dataset.rm,1);renderPiEd()}});
-function piAddLine(item){
-  if(item&&item.id){const ex=pi.lines.find(l=>l.pid===item.id);if(ex){renderPiEd();const q=$(`#piLines .pl[data-i="${pi.lines.indexOf(ex)}"] [data-k="qty"]`);q&&q.focus();return}}
-  pi.lines.push(lineFrom(item));$('#piAdd').value='';$('#piSug').hidden=true;renderPiEd();
+function piAddLine(item,scanned){
+  $('#piAdd').value='';$('#piSug').hidden=true;
+  const ex=item&&item.id&&pi.lines.find(l=>l.pid===item.id);
+  if(ex){if(scanned)ex.qty=r2((+ex.qty||0)+1);renderPiEd();if(scanned)return $('#piAdd').focus();const q=$(`#piLines .pl[data-i="${pi.lines.indexOf(ex)}"] [data-k="qty"]`);return q&&q.focus()}
+  const l=lineFrom(item);if(scanned&&item&&item.id)l.qty=1;pi.lines.push(l);renderPiEd();
+  if(scanned&&item&&item.id)return $('#piAdd').focus();
   const el=$(`#piLines .pl[data-i="${pi.lines.length-1}"]`);(el.querySelector(item&&item.id?'[data-k="qty"]':(item&&item.name?'[data-k="code"]':'[data-k="name"]'))).focus();
 }
+function piScan(v){v=String(v).trim();if(!v)return;
+  const p=S.products.find(x=>String(x.code)===v);if(p)return piAddLine(p,true);
+  if(/^\d{6,}$/.test(v)){const ex=pi.lines.find(l=>!l.pid&&l.code===v);if(ex){ex.qty=r2((+ex.qty||0)+1);$('#piAdd').value='';return renderPiEd()}return piAddLine({code:v},true)}
+  const m=S.products.filter(x=>x.name.toLowerCase().includes(v.toLowerCase()));if(m.length===1)return piAddLine(m[0]);
+  if(!m.length)return piAddLine({name:v});toast('اختار المنتج من القائمة')}
 $('#piAdd').addEventListener('input',e=>{const v=e.target.value.trim().toLowerCase(),box=$('#piSug');if(!v){box.hidden=true;return}
   const m=S.products.filter(p=>p.name.toLowerCase().includes(v)||String(p.code||'').includes(v)).slice(0,8);
   box.innerHTML=m.map(p=>`<button type="button" data-sp="${p.id}"><span>${esc(p.name)}</span><span class="muted num">${esc(p.code||'')}</span></button>`).join('')+`<button type="button" data-new="1"><span><b>+ منتج جديد:</b> ${esc(e.target.value.trim())}</span></button>`;box.hidden=false});
 $('#piSug').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const v=$('#piAdd').value.trim();
   if(b.dataset.sp)piAddLine(findP(b.dataset.sp));else piAddLine(/^\d{6,}$/.test(v)?{code:v}:{name:v})});
-$('#piAdd').addEventListener('keydown',e=>{if(e.key!=='Enter')return;e.preventDefault();const v=e.target.value.trim();if(!v)return;
-  const p=S.products.find(x=>String(x.code)===v);if(p)return piAddLine(p);
-  if(/^\d{6,}$/.test(v))return piAddLine({code:v});
-  const m=S.products.filter(x=>x.name.toLowerCase().includes(v.toLowerCase()));if(m.length===1)return piAddLine(m[0]);
-  if(!m.length)return piAddLine({name:v});toast('اختار المنتج من القائمة')});
+$('#piAdd').addEventListener('keydown',e=>{if(e.key!=='Enter')return;e.preventDefault();piScan(e.target.value)});
 document.addEventListener('click',e=>{if(!e.target.closest('#piSug,#piAdd'))$('#piSug').hidden=true});
 function applyPinv(inv){inv.lines.forEach(l=>{let p=l.pid&&findP(l.pid);
   if(!p){p={id:uid(),name:l.name,code:l.code,cat:l.cat,unit:l.unit,price:0,cost:0,base:0,stock:0};S.products.push(p);l.pid=p.id}
@@ -889,7 +896,7 @@ $('#acctBtns').onclick=async e=>{const id=e.target.id;
   if(id==='aOut')ask('خروج من الحساب','البيانات هتفضل محفوظة على الحساب. الجهاز ده هيرجع لشاشة الدخول.',async()=>{try{await cloud.sb.auth.signOut()}catch(e){}cloud.uid=null;cloud.synced=new Map();setMode('');setSync('off');gate('login')})};
 
 /* ---------- boot ---------- */
-if(window.ART)['#camBtn','#rPrint','#printDay','#expBtn','#csvBtn'].forEach(q=>$(q).hidden=true);
+if(window.ART)['#camBtn','#piCam','#fCam','#rPrint','#printDay','#expBtn','#csvBtn'].forEach(q=>$(q).hidden=true);
 function renderSale(){$('#demoBanner').hidden=!(S.demo&&!S.demoSeen&&S.products.some(p=>p.demo));renderShelf();renderCart()}
 function tick(){$('#today').textContent=new Date().toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long'})}
 if(!S){S=structuredClone(DEF);loadDemo()}
