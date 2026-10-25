@@ -1,6 +1,6 @@
 // Offline support: the app's own files are fetched fresh when online and served from cache when not.
 // Supabase API calls are never cached; they go straight to the network.
-const CACHE = 'sm-cashier-v1';
+const CACHE = 'sm-cashier-v2';
 const SHELL = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 const CDN = /^https:\/\/(cdn\.jsdelivr\.net|fonts\.googleapis\.com|fonts\.gstatic\.com)\//;
 
