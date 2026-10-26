@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#c2410c">
+<meta name="theme-color" content="#34501c">
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="icon" href="../icon-192.png">
 <link rel="apple-touch-icon" href="../icon-192.png">
@@ -14,7 +14,7 @@
 <title>كاشير السوبر ماركت</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Readex+Pro:wght@500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Readex+Pro:wght@500;700&display=swap">
 <style>
 /* Layout: a supermarket till. Scanner bar + shelf of products on one side, the receipt tape on the other; stacks on phones. */
 :root{
@@ -251,61 +251,6 @@ dialog form,dialog .in{padding:18px;display:grid;gap:12px}
 }
 #printArea{display:none}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
-/* ---- look 3: warm background, big coloured tiles, pastel product cards ---- */
-:root{
-  --bg:#fff8f0; --surface:#ffffff; --sunk:#fbeee0; --line:#f1dcc8;
-  --fg:#2a1d12; --muted:#6b5444; --accent:#c2410c; --accent-fg:#ffffff; --accent-soft:#ffe2c7;
-  --tag:#ffe2c7; --tag-fg:#7c2d12; --paper:#fffdf9;
-  --side:#2a1d12; --side-fg:#fff8f0; --side-muted:#d9c3ae; --side-hover:#3d2b1d; --side-on:#c2410c; --side-line:#43301f;
-  --c-green:#c2410c; --c-blue:#1d4ed8; --c-orange:#0f766e; --c-red:#6d28d9; --c-purple:#6d28d9; --c-gray:#5b4636;
-  --hero:#2a1d12; --hero-fg:#fff8f0;
-  --p1:#ffe2c7; --p1-fg:#9a3412; --p2:#dbe6ff; --p2-fg:#1e3a8a; --p3:#d3f0ea; --p3-fg:#115e59; --p4:#e4e0f7; --p4-fg:#3b1d8f;
-  --f-display:"Baloo Bhaijaan 2","IBM Plex Sans Arabic",Tahoma,sans-serif;
-  --f-body:"Baloo Bhaijaan 2","IBM Plex Sans Arabic",Tahoma,sans-serif;
-  --r:14px;
-}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#1a120c; --surface:#261a12; --sunk:#2f2117; --line:#45311f;
-  --fg:#f6ebe0; --muted:#c9b29c; --accent:#ff8a3d; --accent-fg:#2a1d12; --accent-soft:#4a2a14;
-  --tag:#4a2a14; --tag-fg:#ffd2ae; --paper:#221810;
-  --side:#120c08; --side-hover:#2a1d12; --side-on:#c2410c; --side-line:#2f2117;
-  --hero:#3d2b1d; --hero-fg:#fff8f0;
-  --p1:#4a2a14; --p1-fg:#ffc499; --p2:#1f2d52; --p2-fg:#b9ccff; --p3:#12392f; --p3-fg:#9fe3d3; --p4:#2e2452; --p4-fg:#d2c8ff}}
-:root[data-theme="dark"]{
-  --bg:#1a120c; --surface:#261a12; --sunk:#2f2117; --line:#45311f;
-  --fg:#f6ebe0; --muted:#c9b29c; --accent:#ff8a3d; --accent-fg:#2a1d12; --accent-soft:#4a2a14;
-  --tag:#4a2a14; --tag-fg:#ffd2ae; --paper:#221810;
-  --side:#120c08; --side-hover:#2a1d12; --side-on:#c2410c; --side-line:#2f2117;
-  --hero:#3d2b1d; --hero-fg:#fff8f0;
-  --p1:#4a2a14; --p1-fg:#ffc499; --p2:#1f2d52; --p2-fg:#b9ccff; --p3:#12392f; --p3-fg:#9fe3d3; --p4:#2e2452; --p4-fg:#d2c8ff}
-.brand .mark{border-radius:14px}
-.btn{border-radius:14px}
-.panel,.tbl,.kpi{border-radius:22px}
-.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
-.tile{border:0;border-radius:26px;padding:18px;min-height:130px;justify-items:start;align-content:space-between;text-align:start;color:#fff;font:800 22px var(--f-display)}
-.tile i{width:auto;height:auto;border-radius:0;background:none!important;box-shadow:none;color:inherit}
-.tile svg{width:40px;height:40px}
-.t-green{background:#c2410c}.t-blue{background:#1d4ed8}.t-orange{background:#0f766e}.t-purple{background:#6d28d9}
-.t-red{background:var(--p1);color:var(--p1-fg)}.t-gray{background:var(--p4);color:var(--p4-fg)}
-.stat{border-radius:22px}
-.stat b{font-weight:800}
-.s-green{background:var(--hero);color:var(--hero-fg)}.s-blue{background:#1d4ed8}.s-orange{background:#0f766e}.s-red{background:#6d28d9}
-.scan input{border-radius:18px}
-#camBtn{background:var(--accent);color:var(--accent-fg);border-color:var(--accent);border-radius:18px}
-.chip{border:0;background:var(--sunk);color:var(--fg)}
-.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg)}
-.prod{border:0;border-radius:22px;padding:14px;min-height:112px;background:var(--p1);color:var(--p1-fg)}
-.shelf .prod:nth-child(4n+2){background:var(--p2);color:var(--p2-fg)}
-.shelf .prod:nth-child(4n+3){background:var(--p3);color:var(--p3-fg)}
-.shelf .prod:nth-child(4n+4){background:var(--p4);color:var(--p4-fg)}
-.prod .nm{font-size:16px;font-weight:700;color:var(--fg)}
-.prod .pr{background:none;color:inherit;padding:0;font:800 21px var(--f-display);clip-path:none}
-.prod .pill{background:rgb(255 255 255/.6);color:var(--fg)}
-.tape{border-radius:24px}
-.total{font-weight:800;color:var(--accent)}
-#payBtn{background:var(--accent);border-color:var(--accent);color:var(--accent-fg);border-radius:18px;font:800 20px var(--f-display)}
-@media (max-width:860px){#cartBar:not([hidden]){background:var(--hero);color:var(--hero-fg);border-radius:24px 24px 0 0}}
-
 /* ---- easier reading: bigger text and icons, darker text ---- */
 :root{--fg:#140b03;--muted:#3f2d1e}
 body{font-size:17px}
@@ -337,22 +282,124 @@ th{font-size:15px;color:var(--fg)}td{font-size:16px}
 .pay{grid-template-columns:repeat(3,minmax(0,1fr))}
 .tiles .t-teal{background:#0e7490}.tiles .t-pink{background:#be185d}
 .bal-due{color:var(--bad);font-weight:700}.bal-ok{color:var(--ok);font-weight:700}
+
+/* ---- look of خير بلدنا: cream background, olive green, white side menu with groups, green top bar ---- */
+:root,:root[data-theme="dark"]{
+  color-scheme:light;
+  --bg:#f8f5ea; --surface:#fffdf7; --sunk:#f5f1e3; --line:#e7e0cc;
+  --fg:#141c0e; --muted:#3e4834; --accent:#557a2f; --accent-fg:#ffffff; --accent-soft:#eaf2dc; --accent-ink:#4a6b28;
+  --tag:#eaf2dc; --tag-fg:#3d5a20; --paper:#fffdf7;
+  --ok:#1f8a4c; --ok-soft:#e1f5e9; --warn:#a0640f; --warn-soft:#fbf0dc; --bad:#b8321f; --bad-soft:#fbe5e2;
+  --side:#fffdf7; --side-fg:#141c0e; --side-muted:#3e4834; --side-hover:#f5f1e3; --side-on:#eaf2dc; --side-line:#e7e0cc;
+  --c-green:#557a2f; --c-blue:#2f6db5; --c-orange:#b7791f; --c-red:#c0392b; --c-purple:#6b4fb3; --c-gray:#5b6650;
+  --top:linear-gradient(90deg,#34501c,#4c6b2a); --hero:linear-gradient(135deg,#66883e,#3d5a20);
+  --f-display:"Tajawal","IBM Plex Sans Arabic",Tahoma,sans-serif;
+  --f-body:"Tajawal","IBM Plex Sans Arabic",Tahoma,"Segoe UI",sans-serif;
+  --r:10px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:light;
+  --bg:#f8f5ea; --surface:#fffdf7; --sunk:#f5f1e3; --line:#e7e0cc;
+  --fg:#141c0e; --muted:#3e4834; --accent:#557a2f; --accent-fg:#ffffff; --accent-soft:#eaf2dc;
+  --tag:#eaf2dc; --tag-fg:#3d5a20; --paper:#fffdf7;
+  --ok:#1f8a4c; --ok-soft:#e1f5e9; --warn:#a0640f; --warn-soft:#fbf0dc; --bad:#b8321f; --bad-soft:#fbe5e2;
+  --side:#fffdf7; --side-hover:#f5f1e3; --side-on:#eaf2dc; --side-line:#e7e0cc}}
+body{font-weight:500}
+/* side menu: light, grouped, olive marker on the open page */
+.side{border-inline-end:1px solid var(--line);color:var(--fg)}
+.sbrand{border-bottom:1px solid var(--line)}
+.sbrand .mark,.brand .mark{background:var(--accent);color:#fff;border-radius:10px}
+.sbrand small{color:var(--muted)}
+.snav{gap:2px}
+.snav .grp{font-size:14px;color:var(--muted);padding:12px 12px 4px;font-weight:500}
+.snav button{color:var(--fg);font-weight:500;position:relative}
+.snav button svg{opacity:.8}
+.snav button:hover{background:var(--sunk);color:var(--fg)}
+.snav button[aria-current="true"]{background:var(--accent-soft);color:var(--accent-ink);font-weight:700}
+.snav button[aria-current="true"] .ic{color:var(--accent)}
+.snav button[aria-current="true"]::before{content:"";position:absolute;inset-inline-start:-14px;top:8px;bottom:8px;width:4px;border-radius:0 4px 4px 0;background:var(--accent)}
+/* green top bar */
+header.top{background:var(--top);color:#fff;border-bottom:0;margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)));padding-inline:16px;padding-block:12px}
+header.top .brand small{color:rgb(255 255 255/.8)}
+header.top .brand .mark{background:#fff;color:var(--accent)}
+header.top .iconbtn,#menuBtn{background:transparent;border:1px solid rgb(255 255 255/.4);color:#fff}
+header.top .sync{background:rgb(255 255 255/.15);color:#fff}
+header.top .sync[data-s="err"]{background:#fbe5e2;color:var(--bad)}
+@media (min-width:900px){header.top{margin-right:-24px;margin-left:calc(-1*max(24px,env(safe-area-inset-left,0px)));padding-inline:24px}}
+#menuBtn{display:none;width:48px;height:48px;border-radius:10px;place-items:center}
+#scrim{position:fixed;inset:0;background:rgb(0 0 0/.45);z-index:24}
+@media (max-width:899px){
+  #menuBtn{display:grid}
+  .side{display:flex;z-index:25;width:min(290px,86vw);inset-inline-start:0;transform:translateX(100%);transition:transform .25s}
+  body.side-open .side{transform:none;box-shadow:-8px 0 30px rgb(0 0 0/.2)}
+  .bnav{background:var(--surface)}
+}
+/* home: hero card in green, plain cards with olive icons */
+.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+.tile{border:1px solid var(--line);background:var(--surface)!important;color:var(--fg)!important;border-radius:14px;padding:16px;min-height:0;justify-items:start;align-content:start;gap:10px;text-align:start;font:700 19px var(--f-display)}
+.tile i{width:58px;height:58px;border-radius:14px;display:grid;place-items:center;background:var(--accent-soft)!important;color:var(--accent)!important;box-shadow:none}
+.tile svg{width:32px;height:32px}
+.t-red i{background:var(--warn-soft)!important;color:var(--warn)!important}
+.stat{border-radius:14px;background:var(--surface);color:var(--fg);border:1px solid var(--line);box-shadow:none}
+.stat small{color:var(--muted)}.stat span{color:var(--muted)}
+.stat.s-green{background:var(--hero);color:#fff;border:0}.stat.s-green small,.stat.s-green span{color:rgb(255 255 255/.88)}
+.s-blue b{color:var(--c-blue)}.s-orange b{color:var(--accent)}.s-red b{color:var(--warn)}
+.panel,.tbl,.kpi,.tape{border-radius:var(--r)}
+.kpi b{font-family:var(--f-display)}
+/* buttons and inputs */
+.btn{border:0;background:var(--sunk);border-radius:var(--r)}
+.btn:hover{background:var(--line)}
+.btn.pri,#payBtn,#camBtn{background:var(--accent);color:#fff;border:0}
+.btn.ok{background:var(--accent);color:#fff}
+.btn.danger{background:var(--bad-soft);color:var(--bad)}
+.pay button[aria-pressed="true"]{background:var(--accent);color:#fff}
+#payBtn{font:700 20px var(--f-display);border-radius:var(--r)}
+input,select,textarea{background:var(--surface)}
+.scan input{border-radius:var(--r)}
+.seg{border-radius:var(--r);padding:3px}
+.seg button{border-radius:8px;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--fg);box-shadow:0 1px 2px rgb(0 0 0/.1)}
+#pMode button[aria-pressed="true"]{background:var(--accent);color:#fff}
+.chip{border:1px solid var(--line);background:var(--surface);color:var(--muted)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+/* products: plain cards with an olive price */
+.prod{background:var(--surface)!important;border:1px solid var(--line);border-radius:var(--r);color:var(--fg)!important;border-top:4px solid var(--accent)}
+.shelf .prod:nth-child(3n+2){border-top-color:#8cc63f}.shelf .prod:nth-child(3n+3){border-top-color:#3f9b6b}
+.prod:hover{border-color:var(--accent)}
+.prod .pr{color:var(--accent);background:none;padding:0;font:700 21px var(--f-display);clip-path:none}
+.prod .pill{background:var(--accent-soft);color:var(--accent-ink)}
+.prod .pill.low{background:var(--warn-soft);color:var(--warn)}.prod .pill.out{background:var(--bad-soft);color:var(--bad)}
+.tape{background:var(--paper)}
+.total{color:var(--fg)}
+th{background:var(--sunk)}
+@media (max-width:860px){#cartBar:not([hidden]){background:var(--top);color:#fff;border-radius:0}}
+.toast{background:var(--fg);color:var(--bg);border-radius:999px}
+#aKind{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}#aKind button{padding:9px 4px;font-size:15px;min-width:0}
 </style>
 
 <aside class="side" aria-label="القايمة">
   <div class="sbrand"><div class="mark" aria-hidden="true"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2l2.4 11h11l2-8H6.2"/><circle cx="9" cy="19.5" r="1.5"/><circle cx="17" cy="19.5" r="1.5"/></svg></div><div style="min-width:0"><b id="sideName">سوبر ماركت</b><small>نظام الكاشير</small></div></div>
   <nav class="snav" aria-label="الأقسام">
     <button type="button" data-tab="home"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg><span>الرئيسية</span></button>
+    <div class="grp">البيع والمخزون</div>
     <button type="button" data-tab="sale"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2l2.4 11h11l2-8H6.2"/><circle cx="9" cy="19.5" r="1.5"/><circle cx="17" cy="19.5" r="1.5"/></svg><span>البيع</span></button>
     <button type="button" data-tab="purchases"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16l-1.5 13h-13z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg><span>المشتريات</span></button>
     <button type="button" data-tab="products"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg><span>المخزون</span></button>
-    <button type="button" data-tab="acct"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 20v-1a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v1"/><circle cx="9" cy="7" r="4"/><path d="M22 20v-1a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg><span>الحسابات والمصروفات</span></button>
+    <div class="grp">الحسابات</div>
+    <button type="button" data-tab="acct" data-k="customer"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 20v-1a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v1"/><circle cx="9" cy="7" r="4"/><path d="M22 20v-1a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg><span>العملاء</span></button>
+    <button type="button" data-tab="acct" data-k="supplier"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 4h13v11H1zM14 8h4l3 3v4h-7"/><circle cx="5.5" cy="18.5" r="1.5"/><circle cx="17.5" cy="18.5" r="1.5"/></svg><span>الموردين</span></button>
+    <button type="button" data-tab="acct" data-k="partner"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M7 7h7.5a3 3 0 0 1 0 6H9.5a3 3 0 0 0 0 6H17"/></svg><span>جاري الشركاء</span></button>
+    <button type="button" data-tab="acct" data-k="expense"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18M7 15h3"/></svg><span>المصروفات</span></button>
+    <div class="grp">التقارير</div>
     <button type="button" data-tab="reports"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V4M4 20h16"/><path d="M8 16v-4M12 16V8M16 16v-6"/></svg><span>التقارير</span></button>
+    <div class="grp">أدوات</div>
     <button type="button" data-tab="settings"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span>الإعدادات</span></button>
   </nav>
 </aside>
+<div id="scrim" hidden></div>
 <div class="wrap">
 <header class="top">
+  <button type="button" id="menuBtn" aria-label="القايمة"><svg class="ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
   <div class="brand"><div class="mark" aria-hidden="true"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2l2.4 11h11l2-8H6.2"/><circle cx="9" cy="19.5" r="1.5"/><circle cx="17" cy="19.5" r="1.5"/></svg></div><div style="min-width:0"><b id="storeName">سوبر ماركت</b><small id="today"></small></div></div>
   <span class="grow"></span>
   <button type="button" id="sync" class="sync" data-s="off" hidden></button>
@@ -528,7 +575,7 @@ th{font-size:15px;color:var(--fg)}td{font-size:16px}
       <label class="f"><span>العنوان</span><input id="sAddr"></label>
       <div class="grid2"><label class="f"><span>ضريبة % (سيبها 0 لو مفيش)</span><input id="sTaxIn" type="number" min="0" step="any"></label><label class="f"><span>تنبيه المخزون عند</span><input id="sLow" type="number" min="0" step="any"></label></div>
       <label class="f"><span>رسالة آخر الفاتورة</span><input id="sFoot"></label>
-      <label class="f"><span>المظهر</span><select id="sTheme"><option value="">زي الموبايل</option><option value="light">فاتح</option><option value="dark">غامق</option></select></label>
+      <label class="f" hidden><span>المظهر</span><select id="sTheme"><option value="">زي الموبايل</option><option value="light">فاتح</option><option value="dark">غامق</option></select></label>
       <button class="btn pri">حفظ</button>
     </form>
     <div class="stack">
@@ -696,7 +743,9 @@ let tab='sale';
 function show(t,quiet){tab=t;$$('[data-tab]').forEach(b=>b.setAttribute('aria-current',b.dataset.tab===t));$$('main>section').forEach(s=>s.hidden=s.id!=='v-'+t);
   ({home:renderHome,sale:renderSale,products:renderProducts,purchases:renderPurchases,acct:renderAccounts,reports:renderReports,settings:renderSettings})[t]();
   if(t==='sale'){if(!quiet)focusScan()}else updBar();try{localStorage.setItem(KEY+'-tab',t)}catch(e){}}
-$$('[data-tab]').forEach(b=>b.onclick=()=>{show(b.dataset.tab);window.scrollTo(0,0)});
+$$('[data-tab]').forEach(b=>b.onclick=()=>{if(b.dataset.k)aKind=b.dataset.k;show(b.dataset.tab);window.scrollTo(0,0);sideMenu(false)});
+function sideMenu(on){document.body.classList.toggle('side-open',on);$('#scrim').hidden=!on}
+$('#menuBtn').onclick=()=>sideMenu(true);$('#scrim').onclick=()=>sideMenu(false);
 
 /* ---------- sale ---------- */
 let cart=[], cat='', pay='cash', curInv=null, pMode='retail';
@@ -1040,6 +1089,7 @@ const balWord=(pt,b)=>Math.abs(b)<0.005?'خالص':pt.kind==='customer'?(b>0?'ع
 const balCls=(pt,b)=>Math.abs(b)<0.005?'':(pt.kind==='customer'?b>0:b<0)?'bal-due':'bal-ok';
 function renderAccounts(){
   $$('#aKind [data-k]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===aKind));
+  $$('.snav [data-k]').forEach(b=>b.setAttribute('aria-current',tab==='acct'&&b.dataset.k===aKind));
   const ex=aKind==='expense';$('#aParties').hidden=ex;$('#aExp').hidden=!ex;if(ex)return renderExpenses();
   $('#aHead').textContent={customer:'العميل',supplier:'المورد',partner:'الشريك'}[aKind];
   $('#aAdd').textContent='إضافة '+KIND[aKind];
