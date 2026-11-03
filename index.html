@@ -569,7 +569,13 @@ let actx;function beep(ok=true){try{actx=actx||new (window.AudioContext||window.
 
 /* ---------- tabs ---------- */
 let tab='sale';
-function show(t,quiet){tab=t;$$('[data-tab]').forEach(b=>b.setAttribute('aria-current',b.dataset.tab===t));$$('main>section').forEach(s=>s.hidden=s.id!=='v-'+t);
+// one back swipe from any tab returns to the home tab; back from home leaves the app
+let tabPop=false;
+window.addEventListener('popstate',e=>{const s=e.state||{};tabPop=true;try{show(s.t||'home',true)}finally{tabPop=false}});
+function show(t,quiet){
+  if(!tabPop)try{const st=history.state||{},onHome=!st.t||st.t==='home';
+    if(onHome&&t!=='home')history.pushState({t},'');else if(!onHome&&t==='home')history.back();else history.replaceState({t},'')}catch(e){}
+  tab=t;$$('[data-tab]').forEach(b=>b.setAttribute('aria-current',b.dataset.tab===t));$$('main>section').forEach(s=>s.hidden=s.id!=='v-'+t);
   ({home:renderHome,sale:renderSale,products:renderProducts,purchases:renderPurchases,reports:renderReports,settings:renderSettings})[t]();
   if(t==='sale'){if(!quiet)focusScan()}else updBar();try{localStorage.setItem(KEY+'-tab',t)}catch(e){}}
 $$('[data-tab]').forEach(b=>b.onclick=()=>{show(b.dataset.tab);window.scrollTo(0,0)});
