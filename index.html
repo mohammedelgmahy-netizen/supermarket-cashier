@@ -520,7 +520,7 @@ const r2=n=>Math.round((+n||0)*100)/100;
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 
 /* ---------- state ---------- */
-const DEF={settings:{name:'سوبر ماركت',phone:'',addr:'',cur:'ج.م',tax:0,low:5,foot:'شكرًا لزيارتكم',theme:''},
+const DEF={settings:{name:new URLSearchParams(location.search).get('shop')||'سوبر ماركت',phone:'',addr:'',cur:'ج.م',tax:0,low:5,foot:'شكرًا لزيارتكم',theme:''},
   products:[],sales:[],held:[],pinv:[],demo:false,demoSeen:false};
 let S=load();
 function load(){try{const o=JSON.parse(localStorage.getItem(KEY)||'null');if(o&&o.products)return migrate(structuredClone({...DEF,...o,settings:{...DEF.settings,...o.settings}}))}catch(e){}return null}
