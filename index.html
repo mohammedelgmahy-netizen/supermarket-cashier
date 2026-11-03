@@ -414,7 +414,7 @@ dialog form,dialog .in{padding:18px;display:grid;gap:12px}
       <button class="btn pri">حفظ</button>
     </form>
     <div class="stack">
-      <div class="panel stack" id="acct"><h3>الحساب والمزامنة (Supabase)</h3>
+      <div class="panel stack" id="acct"><h3>الحساب والمزامنة</h3>
         <p class="muted" id="acctTxt" style="margin:0"></p>
         <div class="row" id="acctBtns"></div>
       </div>
@@ -488,7 +488,7 @@ dialog form,dialog .in{padding:18px;display:grid;gap:12px}
   <button class="btn pri" id="gGo" style="padding:12px">دخول</button>
   <div class="row" style="justify-content:space-between">
     <button type="button" class="link" id="gSignup">حساب جديد</button>
-    <button type="button" class="link" id="gCfg">تغيير مشروع Supabase</button>
+    <button type="button" class="link" id="gCfg" hidden>تغيير مشروع Supabase</button>
   </div>
   <button type="button" class="btn" id="gLocal">اشتغل على الجهاز ده بس من غير حساب</button>
 </form></div>
@@ -936,7 +936,6 @@ $('#hideDemo').onclick=()=>{S.demoSeen=true;save();$('#demoBanner').hidden=true}
 const CFG_KEY='sm-cashier-cloud',MODE_KEY='sm-cashier-mode';
 const DEF_CFG={url:'https://lhamdnaxioxqptkylvkg.supabase.co',key:'sb_publishable_X6F5g148JSlVUz5sy0XEcw_KGNK218S'};
 const cloud={cfg:DEF_CFG,sb:null,uid:null,email:'',synced:new Map(),state:'off',queue:Promise.resolve(),pending:false};
-try{const c=JSON.parse(localStorage.getItem(CFG_KEY)||'null');if(c&&c.url&&c.key)cloud.cfg=c}catch(e){}
 const getMode=()=>{try{return localStorage.getItem(MODE_KEY)||''}catch(e){return''}};
 const setMode=m=>{try{localStorage.setItem(MODE_KEY,m)}catch(e){}};
 function records(){const m=new Map();const put=(k,id,d)=>m.set(k+':'+id,JSON.stringify(d));
@@ -989,7 +988,7 @@ let gMode='login';
 function gate(mode,msg){gMode=mode;$('#gate').hidden=false;$('#gErr').textContent=msg||'';
   $('#gCfgBox').hidden=mode!=='cfg';$('#gLogBox').hidden=mode==='cfg';$('#gSignup').hidden=mode==='cfg';
   $('#gGo').textContent={login:'دخول',signup:'إنشاء الحساب',cfg:'حفظ'}[mode];$('#gSignup').textContent=mode==='signup'?'عندي حساب، دخول':'حساب جديد';
-  $('#gCfg').textContent=mode==='cfg'?'رجوع':'تغيير مشروع Supabase';
+  $('#gCfg').textContent=mode==='cfg'?'رجوع':'تغيير مشروع Supabase';$('#gCfg').hidden=true;
   $('#gSub').textContent=mode==='cfg'?'من Supabase: Project Settings ثم API. انسخ Project URL والمفتاح':'ادخل بحسابك عشان بياناتك تتحفظ وتظهر على أي جهاز';
   if(mode==='cfg'){$('#gUrl').value=cloud.cfg.url;$('#gKey').value=cloud.cfg.key}
   $('#gPass').autocomplete=mode==='signup'?'new-password':'current-password'}
