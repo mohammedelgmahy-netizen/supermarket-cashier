@@ -718,7 +718,8 @@ async function openCam(target){
   camTarget=target;const msg=$('#camMsg');msg.textContent='';$('#cDlg').showModal();
   if(!('BarcodeDetector' in window)){msg.textContent='المتصفح ده مش بيدعم مسح الباركود بالكاميرا. استخدم Chrome على أندرويد، أو اكتب الرقم، أو وصّل قارئ باركود.';return}
   try{detector=detector||new BarcodeDetector({formats:['ean_13','ean_8','upc_a','upc_e','code_128','code_39','itf']});
-    stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'},audio:false});
+    stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:{ideal:1280},height:{ideal:720}},audio:false});
+    try{const tr=stream.getVideoTracks()[0],cp=tr.getCapabilities?tr.getCapabilities():{};if((cp.focusMode||[]).includes('continuous'))await tr.applyConstraints({advanced:[{focusMode:'continuous'}]})}catch(e){}
     const v=$('#cam');v.srcObject=stream;await v.play();msg.textContent='بيدوّر على باركود...';
     camTimer=setInterval(async()=>{try{const r=await detector.detect(v);if(!r.length)return;const c=r[0].rawValue;
       if(c===lastCode&&Date.now()-lastAt<1800)return;lastCode=c;lastAt=Date.now();
