@@ -282,6 +282,7 @@ th{font-size:15px;color:var(--fg)}td{font-size:16px}
 .seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg)}
 .pay{grid-template-columns:repeat(3,minmax(0,1fr))}
 .tiles .t-teal{background:#0e7490}.tiles .t-pink{background:#be185d}
+.stsum{display:grid;gap:6px;border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;background:var(--surface);font-size:17px}.stsum div{display:flex;justify-content:space-between;gap:10px}.stsum .end{border-top:2px solid var(--fg);padding-top:6px;font-weight:800;font-size:19px}
 .bal-due{color:var(--bad);font-weight:700}.bal-ok{color:var(--ok);font-weight:700}
 
 /* ---- look of خير بلدنا: cream background, olive green, white side menu with groups, green top bar ---- */
@@ -1106,22 +1107,34 @@ $('#aForm').onsubmit=e=>{e.preventDefault();const name=$('#aName').value.trim();
   if(S.parties.some(p=>p.kind===aKind&&p.name===name))return toast('الاسم ده موجود');
   S.parties.push({id:uid(),kind:aKind,name,phone:$('#aPhone').value.trim(),opening:r2($('#aOpen').value)});save();$('#aForm').reset();renderAccounts();toast('اتضاف '+name)};
 $('#aBody').onclick=e=>{const b=e.target.closest('[data-pt]');if(b)openStatement(b.dataset.pt)};
-function openStatement(id){const pt=S.parties.find(p=>p.id===id);if(!pt)return;const{ent,bal}=statement(pt);
+// statement period: balance before it + what was taken in it − what was paid in it = what remains
+let stFrom='',stTo='';
+const PER={customer:['المسحوب','المحصّل'],supplier:['المشتريات','المدفوع'],partner:['الإيداعات','المسحوب']};
+function openStatement(id){const pt=S.parties.find(p=>p.id===id);if(!pt)return;const all=statement(pt),bal=all.bal;
+  if(!stTo)stTo=ymd(Date.now());if(!stFrom)stFrom=ymd(Date.now()).slice(0,8)+'01';
+  const f0=new Date(stFrom+'T00:00').getTime(),t1=new Date(stTo+'T00:00').getTime()+864e5;
+  const before=all.ent.filter(x=>x.at<f0),ent=all.ent.filter(x=>x.at>=f0&&x.at<t1);
+  const start=before.length?before[before.length-1].bal:r2(+pt.opening||0);
+  const plus=r2(ent.filter(x=>x.up>0).reduce((s,x)=>s+x.up,0)),minus=r2(ent.filter(x=>x.up<0).reduce((s,x)=>s-x.up,0)),end=r2(start+plus-minus);
+  const [lp,lm]=PER[pt.kind];
   $('#aView').innerHTML=`<div class="row"><h2 class="grow">كشف حساب ${KIND[pt.kind]}: ${esc(pt.name)}</h2>${pt.phone?`<span class="num muted">${esc(pt.phone)}</span>`:''}</div>
-  <div class="tbl" style="max-height:46dvh;overflow:auto"><table style="min-width:0"><thead><tr><th>البيان</th><th>المبلغ</th><th>الرصيد</th></tr></thead><tbody>
-  ${pt.opening?`<tr><td>رصيد قديم</td><td class="num">${fmt(pt.opening)}</td><td class="num">${fmt(pt.opening)}</td></tr>`:''}
-  ${ent.map(x=>`<tr><td style="white-space:normal">${x.sale?`<button type="button" class="link" data-sale="${x.sale}">${esc(x.desc)}</button>`:x.pinv?`<button type="button" class="link" data-pinv="${x.pinv}">${esc(x.desc)}</button>`:esc(x.desc)}<div class="muted num" style="font-size:13.5px">${new Date(x.at).toLocaleDateString('en-GB')}${x.led?` <button type="button" class="link" data-led="${x.led}" style="color:var(--bad)">حذف</button>`:''}</div></td><td class="num">${x.up>0?'+':'−'}${fmt(Math.abs(x.up))}</td><td class="num">${fmt(x.bal)}</td></tr>`).join('')||(pt.opening?'':'<tr><td colspan="3" class="muted" style="text-align:center;padding:18px">مفيش حركات لسه</td></tr>')}
+  <div class="row"><label class="f" style="flex:1 1 130px"><span>من</span><input type="date" id="stFrom" value="${stFrom}"></label><label class="f" style="flex:1 1 130px"><span>إلى</span><input type="date" id="stTo" value="${stTo}"></label></div>
+  <div class="stsum"><div><span>المتبقي قبل الفترة</span><b class="num">${fmt(start)}</b></div><div><span>+ ${lp} خلال الفترة</span><b class="num">${fmt(plus)}</b></div><div><span>− ${lm} خلال الفترة</span><b class="num">${fmt(minus)}</b></div><div class="end"><span>= المتبقي آخر الفترة (${balWord(pt,end)})</span><b class="num">${fmt(Math.abs(end))}</b></div></div>
+  <div class="tbl" style="max-height:40dvh;overflow:auto"><table style="min-width:0"><thead><tr><th>البيان</th><th>المبلغ</th><th>الرصيد</th></tr></thead><tbody>
+  <tr><td>المتبقي قبل الفترة</td><td></td><td class="num">${fmt(start)}</td></tr>
+  ${ent.map(x=>`<tr><td style="white-space:normal">${x.sale?`<button type="button" class="link" data-sale="${x.sale}">${esc(x.desc)}</button>`:x.pinv?`<button type="button" class="link" data-pinv="${x.pinv}">${esc(x.desc)}</button>`:esc(x.desc)}<div class="muted num" style="font-size:13.5px">${new Date(x.at).toLocaleDateString('en-GB')}${x.led?` <button type="button" class="link" data-led="${x.led}" style="color:var(--bad)">حذف</button>`:''}</div></td><td class="num">${x.up>0?'+':'−'}${fmt(Math.abs(x.up))}</td><td class="num">${fmt(x.bal)}</td></tr>`).join('')||'<tr><td colspan="3" class="muted" style="text-align:center;padding:18px">مفيش حركات في الفترة دي</td></tr>'}
   </tbody></table></div>
-  <div class="total"><span>الرصيد (${balWord(pt,bal)})</span><span class="num">${money(Math.abs(bal))}</span></div>
+  <div class="total"><span>الرصيد النهارده (${balWord(pt,bal)})</span><span class="num">${money(Math.abs(bal))}</span></div>
   <form id="aPay" class="row" autocomplete="off"><input id="aPayAmt" type="number" min="0.01" step="any" inputmode="decimal" required placeholder="${pt.kind==='customer'?'مبلغ استلمته منه':pt.kind==='supplier'?'مبلغ دفعته له':'المبلغ'}" style="flex:1 1 140px"><input id="aPayNote" placeholder="ملاحظة (اختياري)" style="flex:1 1 140px">${pt.kind==='partner'?'<button class="btn pri" value="dep">إيداع</button><button class="btn" value="wd">سحب</button>':'<button class="btn pri" value="pay">تسجيل دفعة</button>'}</form>
   <div class="row"><button type="button" class="btn" id="aShare">مشاركة</button><span class="grow"></span><button type="button" class="btn danger" id="aDel">حذف الحساب</button><button type="button" class="btn" data-close>قفل</button></div>`;
+  $('#stFrom').onchange=e=>{stFrom=e.target.value;openStatement(pt.id)};$('#stTo').onchange=e=>{stTo=e.target.value;openStatement(pt.id)};
   $('#aPay').onsubmit=e=>{e.preventDefault();const a=r2($('#aPayAmt').value);if(!(a>0))return;const k=(e.submitter&&e.submitter.value)||'pay';
     S.ledger.push({id:uid(),party:pt.id,at:Date.now(),kind:k,amount:a,note:$('#aPayNote').value.trim()});save();openStatement(pt.id);renderAccounts();toast(k==='dep'?'اتسجل الإيداع':k==='wd'?'اتسجل السحب':'اتسجلت الدفعة')};
   $('#aView').querySelector('tbody').onclick=e=>{const s=e.target.closest('[data-sale]');if(s){$('#aDlg').close();return openReceipt(S.sales.find(x=>x.id===s.dataset.sale),false)}
     const p=e.target.closest('[data-pinv]');if(p){$('#aDlg').close();return openPinv(S.pinv.find(x=>x.id===p.dataset.pinv))}
     const d=e.target.closest('[data-led]');if(!d)return;if(d.dataset.sure!=='1'){d.dataset.sure='1';d.textContent='متأكد؟';return}
     S.ledger=S.ledger.filter(l=>l.id!==d.dataset.led);save();openStatement(pt.id);renderAccounts()};
-  $('#aShare').onclick=async()=>{const txt=`${S.settings.name}\nكشف حساب: ${pt.name}\n`+ent.map(x=>`${new Date(x.at).toLocaleDateString('en-GB')} ${x.desc}: ${x.up>0?'+':'-'}${fmt(Math.abs(x.up))}`).join('\n')+`\nالرصيد: ${money(Math.abs(bal))} (${balWord(pt,bal)})`;
+  $('#aShare').onclick=async()=>{const txt=`${S.settings.name}\nكشف حساب: ${pt.name}\nمن ${stFrom} إلى ${stTo}\nالمتبقي قبل الفترة: ${fmt(start)}\n`+ent.map(x=>`${new Date(x.at).toLocaleDateString('en-GB')} ${x.desc}: ${x.up>0?'+':'-'}${fmt(Math.abs(x.up))}`).join('\n')+`\n+ ${lp}: ${fmt(plus)}\n− ${lm}: ${fmt(minus)}\n= المتبقي: ${money(Math.abs(end))} (${balWord(pt,end)})`;
     try{if(navigator.share){await navigator.share({text:txt});return}}catch(e){if(e.name==='AbortError')return}
     try{await navigator.clipboard.writeText(txt);toast('اتنسخ الكشف، الصقه في واتساب')}catch(e){toast('المشاركة مش متاحة هنا')}};
   $('#aDel').onclick=()=>{if(pt.kind==='customer'&&S.sales.some(s=>s.party===pt.id))return toast('العميل ليه فواتير، مينفعش يتمسح');
